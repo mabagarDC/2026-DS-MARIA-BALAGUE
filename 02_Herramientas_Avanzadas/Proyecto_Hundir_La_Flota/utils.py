@@ -106,26 +106,44 @@ def crear_barco(eslora, tablero):
     return barco
 
 def colocar_barcos (tablero):
+    # Lista con las esloras de todos los barcos que se van a colocar
+    # 3 barcos de tamaño 2, 2 barcos de tamaño 3 y 1 barco de tamaño 4
+    
     esloras = [2, 2, 2, 3, 3, 4]
 
+    # Recorremos la lista para ir colocando cada barco
     for eslora in esloras:   
-       
+
+        # Repetimos hasta encontrar una posición válida para el barco
         while True:
+            # Generamos un barco aleatorio con la eslora correspondiente
             barco = crear_barco(eslora, tablero)    
+
+            #Inicialmente suponemos que no hay colisión
             colision = False 
 
+            # Recorremos todas las casillas que ocuparía el barco
             for casilla in barco:
+
+                # Obtenemos fila y columna de cada casilla
                 fila = casilla[0]
                 columna = casilla[1]
 
+                # Si alguna casilla ya contiene una "O",
+                # significa que ya hay otro barco en esa posición
                 if tablero[fila, columna] == "O":
                     colision = True
-
+            
+            # Si no se ha detectado ninguna colisión,
+            # la posición es válida y salimos del while
             if colision == False:
                     break
-
+        
+        # Una vez encontrada una posición válida,
+        # colocamos el barco en el tablero
         tablero_barco= colocar_barco(barco, tablero)
     
+    # Devolvemos el tablero con todos los barcos colocados
     return tablero_barco
         
 
@@ -161,10 +179,7 @@ def turno_jugador (tablero_maquina, tablero_jugador, tablero_maquina_visible):
         else: 
             tablero_maquina_visible[fila, columna] = "A"
             
-        print("TU TABLERO".ljust(45), "TABLERO ENEMIGO")
-
-        for fila_jugador, fila_enemigo in zip(tablero_jugador, tablero_maquina_visible):
-            print(f"{fila_jugador}     {fila_enemigo}")
+        mostrar_tableros(tablero_jugador, tablero_maquina_visible)
 
         if contenido_casilla_maquina == "_":
             break
@@ -187,10 +202,7 @@ def turno_maquina (tablero_jugador, tablero_maquina_visible):
 
         disparar(casilla,tablero_jugador)
             
-        print("TU TABLERO".ljust(45), "TABLERO ENEMIGO")
-
-        for fila_jugador, fila_enemigo in zip(tablero_jugador, tablero_maquina_visible):
-            print(f"{fila_jugador}     {fila_enemigo}")
+        mostrar_tableros(tablero_jugador, tablero_maquina_visible)
 
         if contenido_casilla_jugador == "_":
             break
@@ -203,9 +215,14 @@ def mostrar_tableros(tablero_jugador, tablero_maquina_visible):
     Muestra el tablero del jugador y el tablero enemigo uno al lado del otro.
     """
 
+    # Primero mostramos el nombre de cada tablero.
+    # Con ljust dejamos espacio para que el segundo tablero quede alineado.
     print("\nTU TABLERO".ljust(30), "TABLERO ENEMIGO")
 
+    # Recorremos los dos tableros a la vez, fila por fila.
     for fila_jugador, fila_enemigo in zip(tablero_jugador, tablero_maquina_visible):
+        
+        # Unimos los elementos de cada fila usando espacios.
         fila_jugador_texto = " ".join(fila_jugador)
         fila_enemigo_texto = " ".join(fila_enemigo)
 
